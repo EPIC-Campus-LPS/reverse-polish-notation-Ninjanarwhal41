@@ -43,61 +43,49 @@ public class ReversePolishNotation {
     public static String infixtoPostfix(String input){
         String output = "";
         Stack s = new Stack();
-        String[] arr = input.split(" ");
-        for(int i = 0; i < arr.length; i++){
-            if (Character.isDigit(arr[i].charAt(0))){
-                output += arr[i] + " ";
+        for(int i = 0; i < input.length(); i++){
+            String symbol = input.substring(i, i + 1);
+            char simbol = symbol.charAt(0);
+            if (symbol.equals(" ")){
+                continue;
             }
-            else{
-              if (s.isEmpty()){
-                  s.push(arr[i]);
+            if (symbol.equals("(")){
+                s.push(symbol);
+            }
+            else if (Character.isDigit(simbol))
+            {
+                output += symbol;
+            }
+            else if (symbol.equals(")")) {
+                s.push(symbol);
+                while (!s.isEmpty() && !s.peek().equals("(")){
+                    output += s.pop();
                 }
-              else{
-                  if (checkPrecedence(arr[i], s.peek()){
-                      s.push(arr[i]);
-                  }
-                  else{
-                      output += s.pop();
-                  }
-              }
+                s.pop();
+            }
+            else {
+                while (!s.isEmpty() && checkPrecedence(s.peek()) >= checkPrecedence(symbol)){
+                    output += s.pop();
+                }
+                s.push(symbol);
             }
         }
-
         return output;
     }
-    public static boolean checkPrecedence(String a, String b){
+    public static int checkPrecedence(String a){
         int order = 0;
-        int order2 = 0;
         switch (a){
             case "+", "-":
-                order = 1;
+                order = 3;
                 break;
             case "*", "/":
                 order = 2;
                 break;
             case "^":
-                order = 3;
-                break;
-            case "(":
-                order = 4;
+                order = 1;
                 break;
         }
-        switch (b){
-            case "+", "-":
-                order2 = 1;
-                break;
-            case "*", "/":
-                order2 = 2;
-                break;
-            case "^":
-                order2 = 3;
-                break;
-            case "(":
-                order2 = 4;
-                break;
-        }
-        return order > order2;
-        //if the first one has higher precedence, return true
-        //if the second one has higher precedence, return false.
+        return order;
+        // returns a value for precedence of an operator.
     }
 }
