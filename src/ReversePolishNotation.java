@@ -2,6 +2,11 @@ import java.util.*;
 import java.lang.*;
 
 public class ReversePolishNotation {
+    /**
+     * evaluates a postfix expression.
+     * @param input a given postfix expression with spaces between characters
+     * @return the result of the postfix expression.
+     */
     public static int evaluatePostfix(String input){
         int result = 0;
         Stack s = new Stack();
@@ -40,6 +45,10 @@ public class ReversePolishNotation {
 
     }
 
+    /** translates a given expression to reverse polish (postfix) notation
+     * @param input a given infix expression separated by spaces (except parentheses)
+     * @return the expression in postfix form
+     */
     public static String infixtoPostfix(String input){
         String output = "";
         input = input.replace("(", "( ");
@@ -48,14 +57,10 @@ public class ReversePolishNotation {
         Stack s = new Stack();
         for(int i = 0; i < chars.length; i++){
             String symbol = chars[i];
-            char simbol = symbol.charAt(0);
-            if (symbol.equals(" ")){
-                continue;
-            }
             if (symbol.equals("(")){
                 s.push(symbol);
             }
-            else if (Character.isDigit(simbol))
+            else if (Character.isDigit(symbol.charAt(0)) || (symbol.charAt(0) == '-' && symbol.length() > 1))
             {
                 output += symbol + " ";
             }
