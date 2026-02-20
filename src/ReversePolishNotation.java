@@ -7,7 +7,7 @@ public class ReversePolishNotation {
         Stack s = new Stack();
         String[] arr = input.split(" ");
         for(int i = 0; i < arr.length; i++){
-            if (Character.isDigit(arr[i].charAt(0))){
+            if (Character.isDigit(arr[i].charAt(0)) || (arr[i].charAt(0) == '-' && arr[i].length() > 1)){
                 s.push(arr[i]);
             }
             else
@@ -42,9 +42,12 @@ public class ReversePolishNotation {
 
     public static String infixtoPostfix(String input){
         String output = "";
+        input = input.replace("(", "( ");
+        input = input.replace(")", " )");
+        String[] chars = input.split(" ");
         Stack s = new Stack();
-        for(int i = 0; i < input.length(); i++){
-            String symbol = input.substring(i, i + 1);
+        for(int i = 0; i < chars.length; i++){
+            String symbol = chars[i];
             char simbol = symbol.charAt(0);
             if (symbol.equals(" ")){
                 continue;
@@ -54,21 +57,23 @@ public class ReversePolishNotation {
             }
             else if (Character.isDigit(simbol))
             {
-                output += symbol;
+                output += symbol + " ";
             }
             else if (symbol.equals(")")) {
-                s.push(symbol);
                 while (!s.isEmpty() && !s.peek().equals("(")){
-                    output += s.pop();
+                    output += s.pop() + " ";
                 }
                 s.pop();
             }
             else {
                 while (!s.isEmpty() && checkPrecedence(s.peek()) >= checkPrecedence(symbol)){
-                    output += s.pop();
+                    output += s.pop() + " ";
                 }
                 s.push(symbol);
             }
+        }
+        while (!s.isEmpty()){
+            output += s.pop() + " ";
         }
         return output;
     }
@@ -76,13 +81,13 @@ public class ReversePolishNotation {
         int order = 0;
         switch (a){
             case "+", "-":
-                order = 3;
+                order = 1;
                 break;
             case "*", "/":
                 order = 2;
                 break;
             case "^":
-                order = 1;
+                order = 3;
                 break;
         }
         return order;
